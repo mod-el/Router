@@ -5,7 +5,7 @@ class Router_Config extends Module_Config {
 	/** @var array */
 	private $routerRules = [];
 	/** @var array */
-	private $coreRules = [];
+	private $coreRules = ['rules'=>[], 'controllers'=>[]];
 	/** @var string */
 	private $accetableCharacters = 'a-zа-я0-9_\p{Han}-';
 
@@ -101,10 +101,9 @@ class Router_Config extends Module_Config {
 			$simplifiedRule = preg_replace('/\[(el|cat):[a-z0-9_-]+\]/i', '['.$this->accetableCharacters.']*', $simplifiedRule);
 			$simplifiedRule = str_replace('[*]', '[^?/]*', $simplifiedRule); // Backward compatibility
 
-			$this->coreRules[] = [
-				'rule' => $simplifiedRule,
-				'controller' => $controller,
-			];
+			$this->coreRules['rules'][] = $simplifiedRule;
+			if(!in_array($controller, $this->coreRules['controllers']))
+				$this->coreRules['controllers'][] = $controller;
 		}
 	}
 
@@ -140,7 +139,7 @@ $rules = '.var_export($this->routerRules, true).';
 	 * Imports the rules config file (that should consist in a series of "addRule" method calls)
 	 */
 	function importRules(){
-		$this->coreRules = [];
+		$this->coreRules = ['rules'=>[], 'controllers'=>[]];
 		$this->routerRules = [];
 		$router = $this;
 		if(file_exists(INCLUDE_PATH.'data'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'Router'.DIRECTORY_SEPARATOR.'rules.php'))
