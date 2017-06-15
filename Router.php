@@ -39,6 +39,8 @@ class Router extends Module{
 			$c = 0;
 			$lastCat = false; $lastField = false;
 			foreach($request as $i=>$r){
+				if(!isset($this->rules[$rule]['rule'][$i]))
+					continue;
 				$sub_rule = $this->rules[$rule]['rule'][$i];
 				if(preg_match('/\[cat:[a-z0-9_-]+\]/i', $sub_rule)){
 					$parent_options = $options['parent'][$c++];
@@ -68,6 +70,8 @@ class Router extends Module{
 			// I look for the element id, if present
 			$found_id = false;
 			foreach($request as $i=>$r){
+				if(!isset($this->rules[$rule]['rule'][$i]))
+					continue;
 				$sub_rule = $this->rules[$rule]['rule'][$i];
 				if(strpos('[el:'.$options['id'].']', $sub_rule)!==false){
 					$id = $this->resolveId($r, $sub_rule, '[el:'.$options['id'].']');
@@ -90,6 +94,8 @@ class Router extends Module{
 			// No element id found, I proceed with searching by name
 			if($found_id===false){
 				foreach($request as $i=>$r){
+					if(!isset($this->rules[$rule]['rule'][$i]))
+						continue;
 					$sub_rule = $this->rules[$rule]['rule'][$i];
 					if(preg_match('/\[el:[a-z0-9_-]+\]/i', $sub_rule)){
 						$check = $this->resolveFromDb($r, $sub_rule, [
