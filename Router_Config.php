@@ -16,7 +16,7 @@ class Router_Config extends Module_Config {
 	 * @param array|string $url
 	 * @param array $options
 	 */
-	public function addRule($controller, $url, $options=[]){
+	public function addRule($controller, $url, array $options=[]){
 		$options = array_merge([
 			'id'=>'id',
 			'table'=>null,

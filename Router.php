@@ -31,7 +31,7 @@ class Router extends Module{
 	 * @param string $rule
 	 * @return array|bool
 	 */
-	public function getController($request, $rule){
+	public function getController(array $request, $rule){
 		if(isset($this->rules[$rule])){
 			$options = $this->rules[$rule]['options'];
 
@@ -152,7 +152,7 @@ class Router extends Module{
 	 * @param array $options
 	 * @return bool|null|string
 	 */
-	private function resolveFromDb($req, $rule, $options){
+	private function resolveFromDb($req, $rule, array $options){
 		if($req==$options['if_null']){
 			return null;
 		}else{
@@ -236,7 +236,7 @@ class Router extends Module{
 	 * @param array $fields
 	 * @return array
 	 */
-	private function possibleCombinations($words, $fields){
+	private function possibleCombinations(array $words, array $fields){
 		$n = count($fields);
 		if($n==1) { // Shortcut
 			return [
@@ -308,7 +308,7 @@ class Router extends Module{
 	 * @param array $opt
 	 * @return bool|string
 	 */
-	public function getUrl($controller=false, $id=false, $tags=[], $opt=[]){
+	public function getUrl($controller=false, $id=false, array $tags=[], array $opt=[]){
 		$opt = array_merge(array(
 			'fields'=>array(),
 		), $opt);
@@ -353,7 +353,7 @@ class Router extends Module{
 	 * @param array $rule
 	 * @return array|bool
 	 */
-	private function getUrlFromRule($controller, $id, $tags, $opt, $rule){
+	private function getUrlFromRule($controller, $id, array $tags, array $opt, array $rule){
 		$ordine = array(); // Mi creo l'ordine (si procede dal "prodotto" salendo per le categorie, se presenti. Quindi nel primo ciclo cerco il prodotto, nel secondo giro le categorie, nel terzo tutto il resto
 		foreach($rule['rule'] as $cr => $r){
 			if(strpos($r, '[el:')!==false){
