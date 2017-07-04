@@ -58,7 +58,7 @@ class Router extends Module{
 						'id'=>$parent_options['id'],
 						'table'=>$parent_options['table'],
 						'query-parent'=>$lastCat!==false ? [$lastField, $lastCat] : [],
-						'if_null'=>$options['if_null'],
+						'if-null'=>$options['if-null'],
 					]);
 					if($lastCat===false)
 						return false;
@@ -102,7 +102,7 @@ class Router extends Module{
 							'id'=>$options['id'],
 							'table'=>$options['table'],
 							'query-parent'=>$lastCat!==false ? [$lastField, $lastCat] : [],
-							'if_null'=>$options['if_null'],
+							'if-null'=>$options['if-null'],
 						]);
 
 						if($check!==false){
@@ -153,7 +153,7 @@ class Router extends Module{
 	 * @return bool|null|string
 	 */
 	private function resolveFromDb($req, $rule, array $options){
-		if($req==$options['if_null']){
+		if($req==$options['if-null']){
 			return null;
 		}else{
 			$gruppi = $this->makeWordsGroups($rule, $req);
@@ -380,8 +380,8 @@ class Router extends Module{
 			if(strpos($paradigma, '[cat:')!==false){
 				if(strpos($paradigma, '[el:')===false){ // Se non c'è nessun elemento [el], è una vera categoria, altrimenti è solo un richiamo a un campo della categoria parent di quest'elemento
 					if(array_key_exists($c_cat, $cats) and $cats[$c_cat]===null){
-						if(isset($rule['options']['if_null']))
-							$paradigma = $rule['options']['if_null'];
+						if(isset($rule['options']['if-null']))
+							$paradigma = $rule['options']['if-null'];
 						else
 							$paradigma = '';
 					}else{

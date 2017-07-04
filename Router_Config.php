@@ -24,7 +24,7 @@ class Router_Config extends Module_Config {
 			'parent'=>[],
 			'tags'=>[],
 			'lowercase'=>true,
-			'if_null'=>'',
+			'if-null'=>'',
 		], $options);
 
 		if(is_array($url)){
