@@ -145,4 +145,17 @@ $rules = '.var_export($this->routerRules, true).';
 		if(file_exists(INCLUDE_PATH.'data'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'Router'.DIRECTORY_SEPARATOR.'rules.php'))
 			require(INCLUDE_PATH.'data'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'Router'.DIRECTORY_SEPARATOR.'rules.php');
 	}
+
+	/**
+	 * @param array $data
+	 * @return mixed
+	 */
+	public function install(array $data = []){
+		if(!is_dir(INCLUDE_PATH.'data'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'Router'))
+			mkdir(INCLUDE_PATH.'data'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'Router');
+		if(!file_exists(INCLUDE_PATH.'data'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'Router'.DIRECTORY_SEPARATOR.'rules.php'))
+			file_put_contents(INCLUDE_PATH.'data'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'Router'.DIRECTORY_SEPARATOR.'rules.php', "<?php\n\$router->addRule('Home', '');\n");
+		$this->makeCache();
+		return true;
+	}
 }
