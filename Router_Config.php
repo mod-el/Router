@@ -10,7 +10,7 @@ class Router_Config extends Module_Config {
 	private $accetableCharacters = 'a-zа-я0-9_\p{Han}-';
 
 	/**
-	 * Adds a rule - to be called in the config file ( data/Router/rules.php )
+	 * Adds a rule - to be called in the config file ( app/Router/rules.php )
 	 *
 	 * @param string $controller
 	 * @param array|string $url
@@ -142,8 +142,8 @@ $rules = '.var_export($this->routerRules, true).';
 		$this->coreRules = ['rules'=>[], 'controllers'=>[]];
 		$this->routerRules = [];
 		$router = $this;
-		if(file_exists(INCLUDE_PATH.'data'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'Router'.DIRECTORY_SEPARATOR.'rules.php'))
-			require(INCLUDE_PATH.'data'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'Router'.DIRECTORY_SEPARATOR.'rules.php');
+		if(file_exists(INCLUDE_PATH.'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'Router'.DIRECTORY_SEPARATOR.'rules.php'))
+			require(INCLUDE_PATH.'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'Router'.DIRECTORY_SEPARATOR.'rules.php');
 	}
 
 	/**
@@ -151,10 +151,10 @@ $rules = '.var_export($this->routerRules, true).';
 	 * @return mixed
 	 */
 	public function install(array $data = []){
-		if(!is_dir(INCLUDE_PATH.'data'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'Router'))
-			mkdir(INCLUDE_PATH.'data'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'Router');
-		if(!file_exists(INCLUDE_PATH.'data'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'Router'.DIRECTORY_SEPARATOR.'rules.php'))
-			file_put_contents(INCLUDE_PATH.'data'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'Router'.DIRECTORY_SEPARATOR.'rules.php', "<?php\n\$router->addRule('Home', '');\n");
+		if(!is_dir(INCLUDE_PATH.'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'Router'))
+			mkdir(INCLUDE_PATH.'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'Router');
+		if(!file_exists(INCLUDE_PATH.'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'Router'.DIRECTORY_SEPARATOR.'rules.php'))
+			file_put_contents(INCLUDE_PATH.'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'Router'.DIRECTORY_SEPARATOR.'rules.php', "<?php\n\$router->addRule('Home', '');\n");
 		$this->makeCache();
 		return true;
 	}
