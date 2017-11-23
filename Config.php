@@ -1,7 +1,8 @@
-<?php
-namespace Model;
+<?php namespace Model\Router;
 
-class Router_Config extends Module_Config {
+use Model\Core\Module_Config;
+
+class Config extends Module_Config {
 	/** @var array */
 	private $routerRules = [];
 	/** @var array */
