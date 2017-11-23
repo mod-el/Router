@@ -1,5 +1,6 @@
-<?php
-namespace Model;
+<?php namespace Model\Router;
+
+use Model\Core\Module;
 
 class Router extends Module{
 	/** @var int|bool  */
