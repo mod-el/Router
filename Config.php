@@ -113,7 +113,7 @@ class Config extends Module_Config {
 	 *
 	 * @return bool
 	 */
-	public function makeCache(){
+	public function makeCache(): bool{
 		$this->importRules();
 
 		$cacheFile = INCLUDE_PATH.'model'.DIRECTORY_SEPARATOR.'Router'.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'rules.php';
@@ -131,7 +131,8 @@ $rules = '.var_export($this->routerRules, true).';
 	 *
 	 * @return array
 	 */
-	public function getRules(){
+	public function getRules(): array
+	{
 		$this->importRules();
 		return $this->coreRules;
 	}
@@ -151,7 +152,8 @@ $rules = '.var_export($this->routerRules, true).';
 	 * @param array $data
 	 * @return mixed
 	 */
-	public function install(array $data = []){
+	public function install(array $data = []): bool
+	{
 		if(!is_dir(INCLUDE_PATH.'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'Router'))
 			mkdir(INCLUDE_PATH.'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'Router');
 		if(!file_exists(INCLUDE_PATH.'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'Router'.DIRECTORY_SEPARATOR.'rules.php'))
