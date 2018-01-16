@@ -12,7 +12,7 @@ class Router extends Module{
 	/** @var string */
 	private $accetableCharacters = 'a-zа-я0-9_\p{Han}-';
 
-	public function init($options){
+	public function init(array $options){
 		$this->options = array_merge(array(
 			'charLengthIndexed'=>array(),
 		), $options);
@@ -32,7 +32,7 @@ class Router extends Module{
 	 * @param string $rule
 	 * @return array|bool
 	 */
-	public function getController(array $request, $rule){
+	public function getController(array $request, string $rule){
 		if(isset($this->rules[$rule])){
 			$options = $this->rules[$rule]['options'];
 
@@ -309,7 +309,7 @@ class Router extends Module{
 	 * @param array $opt
 	 * @return bool|string
 	 */
-	public function getUrl($controller=false, $id=false, array $tags=[], array $opt=[]){
+	public function getUrl(string $controller = null, $id=false, array $tags=[], array $opt=[]){
 		$opt = array_merge(array(
 			'fields'=>array(),
 		), $opt);
