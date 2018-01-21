@@ -135,6 +135,9 @@ class Config extends Module_Config
 	{
 		$this->importRules();
 
+		if (!is_dir(INCLUDE_PATH . 'model' . DIRECTORY_SEPARATOR . 'Router' . DIRECTORY_SEPARATOR . 'data'))
+			mkdir(INCLUDE_PATH . 'model' . DIRECTORY_SEPARATOR . 'Router' . DIRECTORY_SEPARATOR . 'data');
+
 		$cacheFile = INCLUDE_PATH . 'model' . DIRECTORY_SEPARATOR . 'Router' . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'rules.php';
 		return (bool)file_put_contents($cacheFile, '<?php
 $rules = ' . var_export($this->routerRules, true) . ';
