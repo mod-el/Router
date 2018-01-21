@@ -16,8 +16,6 @@ class Config extends Module_Config
 	 */
 	protected function assetsList()
 	{
-		$this->addAsset('data');
-
 		$this->addAsset('config', 'rules.php', function () {
 			return "<?php\n\$router->addRule('Home', '');\n";
 		});
