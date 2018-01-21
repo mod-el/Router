@@ -21,9 +21,8 @@ class Config extends Module_Config
 		});
 
 		$this->addAsset('data', 'rules.php', function () {
-			return '<?php
-$rules = [];
-';
+			$this->makeCache();
+			return null;
 		});
 	}
 
@@ -137,13 +136,9 @@ $rules = [];
 		$this->importRules();
 
 		$cacheFile = INCLUDE_PATH . 'model' . DIRECTORY_SEPARATOR . 'Router' . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'rules.php';
-		$scrittura = file_put_contents($cacheFile, '<?php
+		return (bool)file_put_contents($cacheFile, '<?php
 $rules = ' . var_export($this->routerRules, true) . ';
 ');
-		if (!$scrittura)
-			return false;
-
-		return true;
 	}
 
 	/**
