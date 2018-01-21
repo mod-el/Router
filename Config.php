@@ -12,6 +12,22 @@ class Config extends Module_Config
 	private $accetableCharacters = 'a-zа-я0-9_\p{Han}-';
 
 	/**
+	 * @throws \Exception
+	 */
+	protected function assetsList()
+	{
+		$this->addAsset('config', 'rules.php', function () {
+			return "<?php\n\$router->addRule('Home', '');\n";
+		});
+
+		$this->addAsset('data', 'rules.php', function () {
+			return '<?php
+$rules = [];
+';
+		});
+	}
+
+	/**
 	 * Adds a rule - to be called in the config file ( app/Router/rules.php )
 	 *
 	 * @param string $controller
@@ -159,11 +175,6 @@ $rules = ' . var_export($this->routerRules, true) . ';
 	 */
 	public function install(array $data = []): bool
 	{
-		if (!is_dir(INCLUDE_PATH . 'app' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'Router'))
-			mkdir(INCLUDE_PATH . 'app' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'Router');
-		if (!file_exists(INCLUDE_PATH . 'app' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'Router' . DIRECTORY_SEPARATOR . 'rules.php'))
-			file_put_contents(INCLUDE_PATH . 'app' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'Router' . DIRECTORY_SEPARATOR . 'rules.php', "<?php\n\$router->addRule('Home', '');\n");
-		$this->makeCache();
-		return true;
+		return $this->makeCache();
 	}
 }
