@@ -16,6 +16,8 @@ class Config extends Module_Config
 	 */
 	protected function assetsList()
 	{
+		$this->addAsset('data');
+
 		$this->addAsset('config', 'rules.php', function () {
 			return "<?php\n\$router->addRule('Home', '');\n";
 		});
@@ -134,9 +136,6 @@ class Config extends Module_Config
 	public function makeCache(): bool
 	{
 		$this->importRules();
-
-		if (!is_dir(INCLUDE_PATH . 'model' . DIRECTORY_SEPARATOR . 'Router' . DIRECTORY_SEPARATOR . 'data'))
-			mkdir(INCLUDE_PATH . 'model' . DIRECTORY_SEPARATOR . 'Router' . DIRECTORY_SEPARATOR . 'data');
 
 		$cacheFile = INCLUDE_PATH . 'model' . DIRECTORY_SEPARATOR . 'Router' . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'rules.php';
 		return (bool)file_put_contents($cacheFile, '<?php
