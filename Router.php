@@ -78,7 +78,7 @@ class Router extends Module
 				if (!isset($this->rules[$rule]['rule'][$i]))
 					continue;
 				$sub_rule = $this->rules[$rule]['rule'][$i];
-				if (strpos('[el:' . $options['id'] . ']', $sub_rule) !== false) {
+				if (strpos($sub_rule, '[el:' . $options['id'] . ']') !== false) {
 					$id = $this->resolveId($r, $sub_rule, '[el:' . $options['id'] . ']');
 					if ($id and is_numeric($id)) {
 						// The id is in the request, I check if it really exists
