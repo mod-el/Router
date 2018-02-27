@@ -73,13 +73,13 @@ class Config extends Module_Config
 					}
 				}
 
-				if (preg_match('/\[cat:[a-z0-9_-]+\]/i', $url)) {
+				if (preg_match('/\[p:[a-z0-9_-]+\]/i', $url)) {
 					if (!preg_match('/\[el:[a-z0-9_-]+\]/i', $url))
 						$this->model->error('In rule "' . entities($url) . '" is specified a category but not a element!');
 
 					$parentLevelCount = 0;
 					foreach ($url_array as $u) {
-						if (preg_match('/\[cat:[a-z0-9_-]+\]/i', $u))
+						if (preg_match('/\[p:[a-z0-9_-]+\]/i', $u))
 							$parentLevelCount++;
 					}
 
@@ -116,8 +116,8 @@ class Config extends Module_Config
 				'options' => $options,
 			];
 
-			$simplifiedRule = preg_replace('/\[(el|cat):' . $options['id'] . '\]/i', '[0-9]+', $url);
-			$simplifiedRule = preg_replace('/\[(el|cat):[a-z0-9_-]+\]/i', '[' . $this->accetableCharacters . ']*', $simplifiedRule);
+			$simplifiedRule = preg_replace('/\[(el|p):' . $options['id'] . '\]/i', '[0-9]+', $url);
+			$simplifiedRule = preg_replace('/\[(el|p):[a-z0-9_-]+\]/i', '[' . $this->accetableCharacters . ']*', $simplifiedRule);
 			$simplifiedRule = str_replace('[*]', '[^?/]*', $simplifiedRule); // Backward compatibility
 
 			$this->coreRules['rules'][] = $simplifiedRule;

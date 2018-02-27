@@ -47,11 +47,11 @@ class Router extends Module
 				if (!isset($this->rules[$rule]['rule'][$i]))
 					continue;
 				$sub_rule = $this->rules[$rule]['rule'][$i];
-				if (preg_match('/\[cat:[a-z0-9_-]+\]/i', $sub_rule)) {
+				if (preg_match('/\[p:[a-z0-9_-]+\]/i', $sub_rule)) {
 					$parent_options = $options['parent'][$c++];
 
-					if (strpos($sub_rule, '[cat:' . $parent_options['id'] . ']') !== false) {
-						$id = $this->resolveId($r, $sub_rule, '[cat:' . $parent_options['id'] . ']');
+					if (strpos($sub_rule, '[p:' . $parent_options['id'] . ']') !== false) {
+						$id = $this->resolveId($r, $sub_rule, '[p:' . $parent_options['id'] . ']');
 						if ($id and is_numeric($id)) {
 							$lastCat = (int)$id;
 							$lastField = $parent_options['field'];
@@ -144,7 +144,7 @@ class Router extends Module
 	private function resolveId(string $request, string $rule, string $pattern): int
 	{
 		$regex = str_replace($pattern, '([0-9]+)', $rule);
-		$regex = preg_replace('/\[(el|cat):[a-z0-9_-]+\]/i', '.*', $regex);
+		$regex = preg_replace('/\[(el|p):[a-z0-9_-]+\]/i', '.*', $regex);
 		$regex = str_replace('[*]', '[^?/]*', $regex); // Backward compatibility
 		$id = preg_replace('/^' . $regex . '$/i', '$1', $request);
 		return $id;
@@ -210,7 +210,7 @@ class Router extends Module
 	 */
 	private function makeWordsGroups(string $paradigma, string $req): array
 	{
-		$num_gruppi = preg_match_all('/\[(el|cat):[a-z0-9_-]+\](-\[(el|cat):[a-z0-9_-]+\])*/i', $paradigma, $par_gruppi);
+		$num_gruppi = preg_match_all('/\[(el|p):[a-z0-9_-]+\](-\[(el|p):[a-z0-9_-]+\])*/i', $paradigma, $par_gruppi);
 		if ($num_gruppi == 0) return array();
 
 		$regex = $paradigma;
@@ -223,7 +223,7 @@ class Router extends Module
 
 		$gruppi = array();
 		foreach ($par_gruppi[0] as $cg => $g) {
-			$campi = explode('-', preg_replace('/\[(el|cat):([a-z0-9_-]+)\]/i', '$2', $g));
+			$campi = explode('-', preg_replace('/\[(el|p):([a-z0-9_-]+)\]/i', '$2', $g));
 			$gruppi[] = [
 				'fields' => $campi,
 				'words' => explode('-', $valori[$cg]),
@@ -375,7 +375,7 @@ class Router extends Module
 		}
 		$rule['rule'] = array_reverse($rule['rule']);
 		foreach ($rule['rule'] as $cr => $r) {
-			if (strpos($r, '[cat:') !== false) {
+			if (strpos($r, '[p:') !== false) {
 				if (!in_array($cr, $ordine))
 					$ordine[] = $cr;
 			}
@@ -392,7 +392,7 @@ class Router extends Module
 		foreach ($ordine as $cr) { // Controllo corrispondenza url e ricerca id
 			$paradigma = $rule['rule'][$cr];
 
-			if (strpos($paradigma, '[cat:') !== false) {
+			if (strpos($paradigma, '[p:') !== false) {
 				if (strpos($paradigma, '[el:') === false) { // Se non c'è nessun elemento [el], è una vera categoria, altrimenti è solo un richiamo a un campo della categoria parent di quest'elemento
 					if (array_key_exists($c_cat, $cats) and $cats[$c_cat] === null) {
 						if (isset($rule['options']['if-null']))
@@ -401,13 +401,13 @@ class Router extends Module
 							$paradigma = '';
 					} else {
 						if (isset($cats[$c_cat])) {
-							preg_match_all('/\[cat:([a-z0-9_-]+)\]/i', $paradigma, $matches);
+							preg_match_all('/\[p:([a-z0-9_-]+)\]/i', $paradigma, $matches);
 							$campiDaPrendere = $matches[1];
 							if (isset($rule['options']['parent'][$c_cat]) and !in_array($rule['options']['parent'][$c_cat]['field'], $campiDaPrendere))
 								$campiDaPrendere[] = $rule['options']['parent'][$c_cat]['field'];
 
 							if (isset($cat_replacing)) { // Raramente può capitare che nel settore di un elemento si richieda un campo appartenente alla categoria parent... gestisco quest'evenienza settando questa variabile; qui è dove assolvo alla richiesta
-								preg_match_all('/\[cat:([a-z0-9_-]+)\]/i', $rule['rule'][$cat_replacing], $matches);
+								preg_match_all('/\[p:([a-z0-9_-]+)\]/i', $rule['rule'][$cat_replacing], $matches);
 								foreach ($matches[1] as $cdp) {
 									if (!in_array($cdp, $campiDaPrendere))
 										$campiDaPrendere[] = $cdp;
@@ -423,9 +423,9 @@ class Router extends Module
 							foreach ($row as $k => $v) {
 								if (!isset($rule['options']['dontEncode']))
 									$v = rewriteUrlWords($v, $rule['options']['lowercase']);
-								$paradigma = str_replace('[cat:' . $k . ']', $v, $paradigma);
+								$paradigma = str_replace('[p:' . $k . ']', $v, $paradigma);
 								if (isset($cat_replacing)) {
-									$return[$cat_replacing] = str_replace('[cat:' . $k . ']', $v, $return[$cat_replacing]);
+									$return[$cat_replacing] = str_replace('[p:' . $k . ']', $v, $return[$cat_replacing]);
 								}
 							}
 						}
