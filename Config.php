@@ -142,6 +142,16 @@ $rules = ' . var_export($this->routerRules, true) . ';
 	}
 
 	/**
+	 * ORM must be updated in order for the cache to be properly updated
+	 *
+	 * @return array
+	 */
+	public function cacheDependencies(): array
+	{
+		return ['ORM'];
+	}
+
+	/**
 	 * Returns all the rules for the Core to register
 	 *
 	 * @return array
