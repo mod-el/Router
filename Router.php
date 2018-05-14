@@ -483,7 +483,7 @@ class Router extends Module
 
 				foreach ($opt['fields'] as $k => $v) {
 					if (is_numeric($v) or is_string($v))
-						$paradigma = str_replace('[el:' . $k . ']', isset($rule['options']['dontEncode']) ? $v : rewriteUrlWords($v, $rule['options']['lowercase']), $paradigma);
+						$paradigma = str_replace('[el:' . $k . ']', isset($rule['options']['dontEncode']) ? $v : rewriteUrlWords([$v], $rule['options']['lowercase']), $paradigma);
 				}
 
 				if ($node_parent !== false)
