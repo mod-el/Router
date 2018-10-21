@@ -32,9 +32,9 @@ class Router extends Module
 	 *
 	 * @param array $request
 	 * @param string $rule
-	 * @return array|bool
+	 * @return array|null
 	 */
-	public function getController(array $request, string $rule)
+	public function getController(array $request, string $rule): ?array
 	{
 		if (isset($this->rules[$rule])) {
 			$options = $this->rules[$rule]['options'];
@@ -66,7 +66,7 @@ class Router extends Module
 						'if-null' => $options['if-null'],
 					]);
 					if ($lastCat === false)
-						return false;
+						return null;
 
 					$lastField = $parent_options['field'];
 				}
@@ -88,7 +88,7 @@ class Router extends Module
 						}
 						$check = $this->model->_Db->select($options['table'], $where);
 						if (!$check)
-							return false;
+							return null;
 
 						$found_id = $id;
 						break;
@@ -129,7 +129,7 @@ class Router extends Module
 				'controller' => $this->rules[$rule]['controller'],
 			];
 		} else {
-			return false;
+			return null;
 		}
 	}
 
@@ -313,21 +313,23 @@ class Router extends Module
 	/**
 	 * Builds a request url based on the given parameters
 	 *
-	 * @param string|bool $controller
-	 * @param int|bool $id
+	 * @param string|null $controller
+	 * @param null|string $id
 	 * @param array $tags
 	 * @param array $opt
 	 * @return bool|string
 	 */
-	public function getUrl(string $controller = null, $id = false, array $tags = [], array $opt = [])
+	public function getUrl(?string $controller = null, ?string $id = null, array $tags = [], array $opt = []): ?string
 	{
-		$opt = array_merge(array(
-			'fields' => array(),
-		), $opt);
+		if ($controller === null)
+			return null;
 
-		if ($this->model->isLoaded('Multilang') and !isset($tags['lang'])) {
+		$opt = array_merge([
+			'fields' => [],
+		], $opt);
+
+		if ($this->model->isLoaded('Multilang') and !isset($tags['lang']))
 			$tags['lang'] = $this->model->_Multilang->lang;
-		}
 
 		$rules = [];
 		foreach ($this->rules as $r) {
@@ -350,7 +352,7 @@ class Router extends Module
 		}
 
 		if ($url === false)
-			return false;
+			return null;
 
 		return implode('/', $url);
 	}
@@ -359,15 +361,15 @@ class Router extends Module
 	 * Attempts to build a request url given a specific rule (returns false in case of failure)
 	 *
 	 * @param string $controller
-	 * @param int|bool $id
+	 * @param null|string $id
 	 * @param array $tags
 	 * @param array $opt
 	 * @param array $rule
-	 * @return array|bool
+	 * @return array|null
 	 */
-	private function getUrlFromRule(string $controller, $id, array $tags, array $opt, array $rule)
+	private function getUrlFromRule(string $controller, ?string $id, array $tags, array $opt, array $rule): ?array
 	{
-		$ordine = array(); // Mi creo l'ordine (si procede dal "prodotto" salendo per le categorie, se presenti. Quindi nel primo ciclo cerco il prodotto, nel secondo giro le categorie, nel terzo tutto il resto
+		$ordine = []; // Mi creo l'ordine (si procede dal "prodotto" salendo per le categorie, se presenti. Quindi nel primo ciclo cerco il prodotto, nel secondo giro le categorie, nel terzo tutto il resto
 		foreach ($rule['rule'] as $cr => $r) {
 			if (strpos($r, '[el:') !== false) {
 				$ordine[] = $cr;
@@ -386,8 +388,8 @@ class Router extends Module
 				$ordine[] = $cr;
 		}
 
-		$return = array();
-		$cats = array();
+		$return = [];
+		$cats = [];
 		$c_cat = 0;
 		foreach ($ordine as $cr) { // Controllo corrispondenza url e ricerca id
 			$paradigma = $rule['rule'][$cr];
@@ -415,8 +417,8 @@ class Router extends Module
 							}
 
 							$row = $this->getFromDb($rule['options']['table'], $cats[$c_cat], $rule['options']['id'], $tags['lang'] ?? null);
-							if ($row === false)
-								return false;
+							if ($row === null)
+								return null;
 							if (isset($rule['options']['parent'][$c_cat + 1]))
 								$cats[$c_cat + 1] = $row[$rule['options']['parent'][$c_cat]['field']];
 
@@ -447,7 +449,7 @@ class Router extends Module
 					if ($controller == $this->model->controllerName and $this->pageId !== false) // Se i parametri combaciano, posso usare l'id che ho in cache, se ne ho uno
 						$id = $this->pageId;
 					if ($id === false)
-						return false;
+						return null;
 				}
 
 				if (strpos($paradigma, '[el:' . $rule['options']['id'] . ']') !== false)
@@ -470,8 +472,8 @@ class Router extends Module
 
 				if (!empty($prendi)) {
 					$row = $this->getFromDb($rule['options']['table'], $id, $rule['options']['id'], $tags['lang'] ?? null); // Prendo dal DB i campi che mi servono
-					if ($row === false)
-						return false;
+					if ($row === null)
+						return null;
 
 					foreach ($prendi as $k) { // Metto i dati ottenuti dal DB nelle opzioni, così posso usarli dopo
 						$opt['fields'][$k] = $row[$k];
@@ -505,13 +507,12 @@ class Router extends Module
 	 * @param int $id
 	 * @param string $field_id
 	 * @param string $lang
-	 * @return array|bool
+	 * @return array|null
 	 */
-	private function getFromDb(string $table, int $id, string $field_id, string $lang = null)
+	private function getFromDb(string $table, int $id, string $field_id, string $lang = null): ?array
 	{
-		if (!isset($this->cache[$table][(string)$lang][$id])) {
-			$this->cache[$table][(string)$lang][$id] = $this->model->_Db->select($table, [$field_id => $id], ['lang' => $lang]);
-		}
+		if (!isset($this->cache[$table][(string)$lang][$id]))
+			$this->cache[$table][(string)$lang][$id] = $this->model->_Db->select($table, [$field_id => $id], ['lang' => $lang]) ?: null;
 
 		return $this->cache[$table][(string)$lang][$id];
 	}
