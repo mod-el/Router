@@ -2,5 +2,7 @@
 	"name": "Router",
 	"description": "Routes manager, the entry door of your pages, an essential building block of every website",
 	"version": "1.2.1",
-	"dependencies": {}
+	"dependencies": {
+		"Core": ">=2.7.1"
+	}
 }
