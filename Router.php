@@ -5,7 +5,7 @@ use Model\Core\Module;
 class Router extends Module
 {
 	/** @var int|bool */
-	public $pageId = false;
+	public $pageId = null;
 	/** @var array */
 	private $rules = [];
 	/** @var array */
@@ -445,10 +445,10 @@ class Router extends Module
 			if (strpos($paradigma, '[el:') !== false) {
 				$node_parent = false;
 
-				if ($id === false) { // Se non ho l'id, devo cercarlo
-					if ($controller == $this->model->controllerName and $this->pageId !== false) // Se i parametri combaciano, posso usare l'id che ho in cache, se ne ho uno
+				if ($id === null) { // Se non ho l'id, devo cercarlo
+					if ($controller == $this->model->controllerName and $this->pageId !== null) // Se i parametri combaciano, posso usare l'id che ho in cache, se ne ho uno
 						$id = $this->pageId;
-					if ($id === false)
+					if ($id === null)
 						return null;
 				}
 
