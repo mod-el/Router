@@ -178,7 +178,7 @@ $rules = ' . var_export($this->routerRules, true) . ';
 	 * @param array $data
 	 * @return bool
 	 */
-	public function install(array $data = []): bool
+	public function init(?array $data = null): bool
 	{
 		return $this->makeCache();
 	}
