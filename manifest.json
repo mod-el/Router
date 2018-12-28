@@ -3,6 +3,6 @@
 	"description": "Routes manager, the entry door of your pages, an essential building block of every website",
 	"version": "1.2.1",
 	"dependencies": {
-		"Core": ">=2.7.1"
+		"Core": ">=2.8.1"
 	}
 }
