@@ -342,16 +342,16 @@ class Router extends Module
 			}
 		}
 
-		$url = false;
+		$url = null;
 		foreach ($rules as $r) {
 			$attempt = $this->getUrlFromRule($controller, $id, $tags, $opt, $r);
-			if ($attempt !== false) {
+			if ($attempt !== null) {
 				$url = $attempt;
 				break;
 			}
 		}
 
-		if ($url === false)
+		if ($url === null)
 			return null;
 
 		return implode('/', $url);
