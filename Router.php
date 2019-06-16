@@ -516,4 +516,17 @@ class Router extends Module
 
 		return $this->cache[$table][(string)$lang][$id];
 	}
+
+	/**
+	 * @param string $controller
+	 * @return string|null
+	 */
+	public function getElementFor(string $controller): ?string
+	{
+		foreach ($this->rules as $rule) {
+			if ($rule['controller'] === $controller)
+				return $rule['options']['element'] ?: null;
+		}
+		return null;
+	}
 }
