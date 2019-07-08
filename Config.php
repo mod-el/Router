@@ -54,8 +54,14 @@ class Config extends Module_Config
 		} else {
 			$url_array = explode('/', $url);
 
-			if ($this->model->moduleExists('ORM')) {
-				$elements_tree = $this->model->_ORM->getElementsTree();
+			try {
+				$orm = $this->model->load('ORM');
+			} catch (\Exception $e) {
+				$orm = null;
+			}
+
+			if ($orm) {
+				$elements_tree = $orm->getElementsTree();
 
 				if (preg_match('/\[el:[a-z0-9_-]+\]/i', $url)) {
 					if (!$options['table']) {
