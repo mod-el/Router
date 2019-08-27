@@ -324,6 +324,13 @@ class Router extends Module
 		if ($controller === null)
 			return null;
 
+		$this->trigger('gettingUrl', [
+			'controller' => $controller,
+			'id' => $id,
+			'tags' => $tags,
+			'opt' => $opt,
+		]);
+
 		$opt = array_merge([
 			'fields' => [],
 		], $opt);
