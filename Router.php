@@ -425,20 +425,7 @@ class Router extends Module
 							$paradigma = '';
 					} else {
 						if (isset($cats[$c_cat])) {
-							preg_match_all('/\[p:([a-z0-9_-]+)\]/i', $paradigma, $matches);
-							$campiDaPrendere = $matches[1];
-							if (isset($rule['options']['parent'][$c_cat]) and !in_array($rule['options']['parent'][$c_cat]['field'], $campiDaPrendere))
-								$campiDaPrendere[] = $rule['options']['parent'][$c_cat]['field'];
-
-							if (isset($cat_replacing)) { // Raramente può capitare che nel settore di un elemento si richieda un campo appartenente alla categoria parent... gestisco quest'evenienza settando questa variabile; qui è dove assolvo alla richiesta
-								preg_match_all('/\[p:([a-z0-9_-]+)\]/i', $rule['rule'][$cat_replacing], $matches);
-								foreach ($matches[1] as $cdp) {
-									if (!in_array($cdp, $campiDaPrendere))
-										$campiDaPrendere[] = $cdp;
-								}
-							}
-
-							$row = $this->getFromDb($rule['options']['table'], $cats[$c_cat], $rule['options']['id'], $tags['lang'] ?? null);
+							$row = $this->getFromDb($rule['options']['parent'][$c_cat]['table'], $cats[$c_cat], $rule['options']['parent'][$c_cat]['id'], $tags['lang'] ?? null);
 							if ($row === null)
 								return null;
 							if (isset($rule['options']['parent'][$c_cat + 1]))
@@ -446,11 +433,10 @@ class Router extends Module
 
 							foreach ($row as $k => $v) {
 								if (!isset($rule['options']['dontEncode']))
-									$v = rewriteUrlWords($v, $rule['options']['lowercase']);
+									$v = rewriteUrlWords([$v], $rule['options']['lowercase']);
 								$paradigma = str_replace('[p:' . $k . ']', $v, $paradigma);
-								if (isset($cat_replacing)) {
+								if (isset($cat_replacing))
 									$return[$cat_replacing] = str_replace('[p:' . $k . ']', $v, $return[$cat_replacing]);
-								}
 							}
 						}
 

@@ -1,8 +1,8 @@
 {
 	"name": "Router",
 	"description": "Routes manager, the entry door of your pages, an essential building block of every website",
-	"version": "1.2.2",
+	"version": "1.2.3",
 	"dependencies": {
-		"Core": ">=2.8.5"
+		"Core": ">=2.9.0"
 	}
 }
