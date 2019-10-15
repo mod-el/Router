@@ -333,24 +333,18 @@ class Router extends Module
 
 		$opt = array_merge([
 			'fields' => [],
+			'idx' => null,
 		], $opt);
 
 		if ($this->model->isLoaded('Multilang') and !isset($tags['lang']))
 			$tags['lang'] = $this->model->_Multilang->lang;
 
-		$rules = [];
-		foreach ($this->rules as $r) {
-			if ($r['controller'] == $controller) {
-				foreach ($tags as $k => $v) {
-					if (isset($r['options']['tags'][$k]) and $r['options']['tags'][$k] != $v)
-						continue 2;
-				}
-				$rules[] = $r;
-			}
-		}
+		$rules = $this->getRulesFor($controller, $tags);
 
 		$url = null;
-		foreach ($rules as $r) {
+		foreach ($rules as $rIdx => $r) {
+			if ($opt['idx'] !== null and $rIdx !== $opt['idx'])
+				continue;
 			$attempt = $this->getUrlFromRule($controller, $id, $tags, $opt, $r);
 			if ($attempt !== null) {
 				$url = $attempt;
@@ -362,6 +356,27 @@ class Router extends Module
 			return null;
 
 		return implode('/', $url);
+	}
+
+	/**
+	 * @param string|null $controller
+	 * @param array $tags
+	 * @return array
+	 */
+	public function getRulesFor(?string $controller = null, array $tags = []): array
+	{
+		$rules = [];
+		foreach ($this->rules as $r) {
+			if ($r['controller'] == $controller) {
+				foreach ($tags as $k => $v) {
+					if (isset($r['options']['tags'][$k]) and $r['options']['tags'][$k] != $v)
+						continue 2;
+				}
+				$rules[] = $r;
+			}
+		}
+
+		return $rules;
 	}
 
 	/**
