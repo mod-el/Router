@@ -188,4 +188,9 @@ $rules = ' . var_export($this->routerRules, true) . ';
 	{
 		return $this->makeCache();
 	}
+
+	public function getConfigData(): ?array
+	{
+		return [];
+	}
 }
