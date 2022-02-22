@@ -68,14 +68,11 @@ class Config extends Module_Config
 						if (!$options['element'] and $elements_tree and isset($elements_tree['controllers'][$controller]) and $elements_tree['controllers'][$controller])
 							$options['element'] = $elements_tree['controllers'][$controller];
 
-						if (!$options['element'])
-							$this->model->error('Can\'t find an element to load for the rule "' . entities($url) . '"!');
-
-						$table = $elements_tree['elements'][$options['element']]['table'];
-						if ($table)
-							$options['table'] = $table;
-						else
-							$this->model->error('Can\'t find a table to attach to the rule "' . entities($url) . '"!');
+						if ($options['element']) {
+							$table = $elements_tree['elements'][$options['element']]['table'];
+							if ($table)
+								$options['table'] = $table;
+						}
 					}
 				}
 
