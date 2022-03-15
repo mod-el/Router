@@ -90,21 +90,23 @@ class Config extends Module_Config
 						$options['parent'] = [];
 						$el = $options['element'];
 
-						while (count($options['parent']) < $parentLevelCount) {
-							if ($elements_tree['elements'][$el]['parent'] and $elements_tree['elements'][$el]['parent']['element']) {
-								$field = $elements_tree['elements'][$el]['parent']['field'];
-								$el = $elements_tree['elements'][$el]['parent']['element'];
-								if ($elements_tree['elements'][$el]['table']) {
-									$options['parent'][] = [
-										'id' => 'id',
-										'table' => $elements_tree['elements'][$el]['table'],
-										'field' => $field,
-									];
+						if ($el) {
+							while (count($options['parent']) < $parentLevelCount) {
+								if (!empty($elements_tree['elements'][$el]) and $elements_tree['elements'][$el]['parent'] and $elements_tree['elements'][$el]['parent']['element']) {
+									$field = $elements_tree['elements'][$el]['parent']['field'];
+									$el = $elements_tree['elements'][$el]['parent']['element'];
+									if ($elements_tree['elements'][$el]['table']) {
+										$options['parent'][] = [
+											'id' => 'id',
+											'table' => $elements_tree['elements'][$el]['table'],
+											'field' => $field,
+										];
+									} else {
+										$this->model->error('Can\'t find one or more parent element/tables for the rule "' . entities($url) . '"! #1');
+									}
 								} else {
-									$this->model->error('Can\'t find one or more parent element/tables for the rule "' . entities($url) . '"!');
+									$this->model->error('Can\'t find one or more parent element/tables for the rule "' . entities($url) . '"! #2');
 								}
-							} else {
-								$this->model->error('Can\'t find one or more parent element/tables for the rule "' . entities($url) . '"!');
 							}
 						}
 
