@@ -336,8 +336,8 @@ class Router extends Module
 			'idx' => null,
 		], $opt);
 
-		if ($this->model->isLoaded('Multilang') and !isset($tags['lang']))
-			$tags['lang'] = $this->model->_Multilang->lang;
+		if (class_exists('\\Model\\Multilang\\Ml') and !isset($tags['lang']))
+			$tags['lang'] = \Model\Multilang\Ml::getLang();
 
 		$rules = $this->getRulesFor($controller, $tags);
 
@@ -514,7 +514,7 @@ class Router extends Module
 	 * @param string $table
 	 * @param int $id
 	 * @param string $field_id
-	 * @param string $lang
+	 * @param string|null $lang
 	 * @return array|null
 	 */
 	private function getFromDb(string $table, int $id, string $field_id, string $lang = null): ?array
