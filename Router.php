@@ -4,14 +4,14 @@ use Model\Core\Module;
 
 class Router extends Module
 {
-	/** @var int|bool */
-	public $pageId = null;
+	/** @var int|null */
+	public ?int $pageId = null;
 	/** @var array */
-	private $rules = [];
+	private array $rules = [];
 	/** @var array */
-	private $cache = [];
+	private array $cache = [];
 	/** @var string */
-	private $accetableCharacters = 'a-zа-я0-9_\p{Han}-';
+	private string $accetableCharacters = 'a-zа-я0-9_\p{Han}-';
 
 	public function init(array $options)
 	{
@@ -65,7 +65,7 @@ class Router extends Module
 						'query-parent' => $lastCat !== false ? [$lastField, $lastCat] : [],
 						'if-null' => $options['if-null'],
 					]);
-					if ($lastCat === false)
+					if (!$lastCat)
 						return null;
 
 					$lastField = $parent_options['field'];
@@ -110,7 +110,7 @@ class Router extends Module
 							'if-null' => $options['if-null'],
 						]);
 
-						if ($check !== false) {
+						if ($check) {
 							$found_id = $check;
 							break;
 						}
@@ -120,9 +120,8 @@ class Router extends Module
 
 			if ($found_id !== false) {
 				$this->pageId = $found_id;
-				if ($options['element']) {
+				if ($options['element'])
 					$this->model->_ORM->loadMainElement($options['element'], $found_id);
-				}
 			}
 
 			return [
@@ -190,7 +189,9 @@ class Router extends Module
 			$order_by = in_array($options['table'], $this->options['charLengthIndexed']) ? 'zk_char_length' : '(' . implode('+', $campi_coinvolti) . ')';
 			if ($options['query-parent'])
 				$qry_ar[] = $options['query-parent'];
-			return $this->model->_Db->select($options['table'], $qry_ar, ['field' => $options['id'], 'order_by' => $order_by]);
+
+			$check = $this->model->_Db->select($options['table'], $qry_ar, ['order_by' => $order_by]);
+			return $check ? $check[$options['id']] : null;
 		}
 	}
 
