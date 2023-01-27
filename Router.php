@@ -4,20 +4,17 @@ use Model\Core\Module;
 
 class Router extends Module
 {
-	/** @var int|null */
 	public ?int $pageId = null;
-	/** @var array */
+	private array $options = [];
 	private array $rules = [];
-	/** @var array */
 	private array $cache = [];
-	/** @var string */
 	private string $accetableCharacters = 'a-zа-я0-9_\p{Han}-';
 
 	public function init(array $options)
 	{
-		$this->options = array_merge(array(
-			'charLengthIndexed' => array(),
-		), $options);
+		$this->options = array_merge([
+			'charLengthIndexed' => [],
+		], $options);
 
 		if (file_exists(INCLUDE_PATH . 'model' . DIRECTORY_SEPARATOR . 'Router' . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'rules.php')) {
 			require(INCLUDE_PATH . 'model' . DIRECTORY_SEPARATOR . 'Router' . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'rules.php');
