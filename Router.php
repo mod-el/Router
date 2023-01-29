@@ -1,6 +1,7 @@
 <?php namespace Model\Router;
 
 use Model\Core\Module;
+use Model\Router\Events\RouterUrlGet;
 
 class Router extends Module
 {
@@ -314,25 +315,20 @@ class Router extends Module
 	 * @param string|null $controller
 	 * @param null|string $id
 	 * @param array $tags
-	 * @param array $opt
-	 * @return bool|string
+	 * @param array $options
+	 * @return null|string
 	 */
-	public function getUrl(?string $controller = null, ?string $id = null, array $tags = [], array $opt = []): ?string
+	public function getUrl(?string $controller = null, ?string $id = null, array $tags = [], array $options = []): ?string
 	{
 		if ($controller === null)
 			return null;
 
-		$this->trigger('gettingUrl', [
-			'controller' => $controller,
-			'id' => $id,
-			'tags' => $tags,
-			'opt' => $opt,
-		]);
+		\Model\Events\Events::dispatch(new RouterUrlGet($controller, $id, $tags, $options));
 
-		$opt = array_merge([
+		$options = array_merge([
 			'fields' => [],
 			'idx' => null,
-		], $opt);
+		], $options);
 
 		if (class_exists('\\Model\\Multilang\\Ml') and !isset($tags['lang']))
 			$tags['lang'] = \Model\Multilang\Ml::getLang();
@@ -341,9 +337,9 @@ class Router extends Module
 
 		$url = null;
 		foreach ($rules as $rIdx => $r) {
-			if ($opt['idx'] !== null and $rIdx !== $opt['idx'])
+			if ($options['idx'] !== null and $rIdx !== $options['idx'])
 				continue;
-			$attempt = $this->getUrlFromRule($controller, $id, $tags, $opt, $r);
+			$attempt = $this->getUrlFromRule($controller, $id, $tags, $options, $r);
 			if ($attempt !== null) {
 				$url = $attempt;
 				break;
