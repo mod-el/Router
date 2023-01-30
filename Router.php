@@ -1,7 +1,7 @@
 <?php namespace Model\Router;
 
 use Model\Core\Module;
-use Model\Router\Events\RouterUrlGet;
+use Model\Router\Events\UrlGet;
 
 class Router extends Module
 {
@@ -323,7 +323,7 @@ class Router extends Module
 		if ($controller === null)
 			return null;
 
-		\Model\Events\Events::dispatch(new RouterUrlGet($controller, $id, $tags, $options));
+		\Model\Events\Events::dispatch(new UrlGet($controller, $id, $tags, $options));
 
 		$options = array_merge([
 			'fields' => [],

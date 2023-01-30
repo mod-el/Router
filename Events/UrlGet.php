@@ -2,7 +2,7 @@
 
 use Model\Events\AbstractEvent;
 
-class RouterUrlGet extends AbstractEvent
+class UrlGet extends AbstractEvent
 {
 	public function __construct(private ?string $controller = null, private ?string $id = null, private array $tags = [], private array $options = [])
 	{
