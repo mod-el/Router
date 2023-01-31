@@ -76,15 +76,15 @@ class Router extends Module
 				if (!isset($this->rules[$rule]['rule'][$i]))
 					continue;
 				$sub_rule = $this->rules[$rule]['rule'][$i];
-				if (strpos($sub_rule, '[el:' . $options['id'] . ']') !== false) {
+				if (str_contains($sub_rule, '[el:' . $options['id'] . ']')) {
 					$id = $this->resolveId($r, $sub_rule, '[el:' . $options['id'] . ']');
 					if ($id and is_numeric($id)) {
 						// The id is in the request, I check if it really exists
 						$where[$options['id']] = $id;
-						if ($lastCat !== false) {
+						if ($lastCat !== false)
 							$where[$lastField] = $lastCat;
-						}
-						$check = $this->model->_Db->select($options['table'], $where);
+
+						$check = \Model\Db\Db::getConnection()->select($options['table'], $where);
 						if (!$check)
 							return null;
 
@@ -188,7 +188,7 @@ class Router extends Module
 			if ($options['query-parent'])
 				$qry_ar[] = $options['query-parent'];
 
-			$check = $this->model->_Db->select($options['table'], $qry_ar, ['order_by' => $order_by]);
+			$check = \Model\Db\Db::getConnection()->select($options['table'], $qry_ar, ['order_by' => $order_by]);
 			return $check ? $check[$options['id']] : null;
 		}
 	}
@@ -514,7 +514,7 @@ class Router extends Module
 	private function getFromDb(string $table, int $id, string $field_id, string $lang = null): ?array
 	{
 		if (!isset($this->cache[$table][(string)$lang][$id]))
-			$this->cache[$table][(string)$lang][$id] = $this->model->_Db->select($table, [$field_id => $id], ['lang' => $lang]) ?: null;
+			$this->cache[$table][(string)$lang][$id] = \Model\Db\Db::getConnection()->select($table, [$field_id => $id], ['lang' => $lang]) ?: null;
 
 		return $this->cache[$table][(string)$lang][$id];
 	}
