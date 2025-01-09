@@ -5,16 +5,16 @@ use Model\Core\Module_Config;
 class Config extends Module_Config
 {
 	/** @var array */
-	private $routerRules = [];
+	private array $routerRules = [];
 	/** @var array */
-	private $coreRules = ['rules' => [], 'controllers' => []];
+	private array $coreRules = ['rules' => [], 'controllers' => []];
 	/** @var string */
-	private $accetableCharacters = 'a-zа-я0-9_\p{Han}-';
+	private string $accetableCharacters = 'a-zа-я0-9_\p{Han}-';
 
 	/**
 	 * @throws \Exception
 	 */
-	protected function assetsList()
+	protected function assetsList(): void
 	{
 		$this->addAsset('config', 'rules.php', function () {
 			return "<?php\n\$router->addRule('Home', '');\n";
@@ -34,7 +34,7 @@ class Config extends Module_Config
 	 * @param array $options
 	 * @throws \Exception
 	 */
-	public function addRule(string $controller, $url, array $options = [])
+	public function addRule(string $controller, array|string $url, array $options = []): void
 	{
 		$options = array_merge([
 			'id' => 'id',
@@ -170,7 +170,7 @@ $rules = ' . var_export($this->routerRules, true) . ';
 	/**
 	 * Imports the rules config file (that should consist in a series of "addRule" method calls)
 	 */
-	function importRules()
+	private function importRules(): void
 	{
 		$this->coreRules = ['rules' => [], 'controllers' => []];
 		$this->routerRules = [];
@@ -180,7 +180,7 @@ $rules = ' . var_export($this->routerRules, true) . ';
 	}
 
 	/**
-	 * @param array $data
+	 * @param array|null $data
 	 * @return bool
 	 */
 	public function init(?array $data = null): bool
