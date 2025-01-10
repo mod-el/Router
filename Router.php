@@ -511,7 +511,7 @@ class Router extends Module
 	 * @param string|null $lang
 	 * @return array|null
 	 */
-	private function getFromDb(string $table, int $id, string $field_id, string $lang = null): ?array
+	private function getFromDb(string $table, int $id, string $field_id, ?string $lang = null): ?array
 	{
 		if (!isset($this->cache[$table][(string)$lang][$id]))
 			$this->cache[$table][(string)$lang][$id] = \Model\Db\Db::getConnection()->select($table, [$field_id => $id], ['lang' => $lang]) ?: null;
