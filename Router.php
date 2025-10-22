@@ -8,7 +8,7 @@ class Router extends Module
 	public ?int $pageId = null;
 	private array $rules = [];
 	private array $cache = [];
-	private string $accetableCharacters = 'a-zа-я0-9_\p{Han}-';
+	private string $acceptableCharacters = 'a-zа-я0-9_\p{Han}-';
 
 	public function init(array $options)
 	{
@@ -208,7 +208,7 @@ class Router extends Module
 
 		$regex = $paradigma;
 		foreach ($par_gruppi[0] as $g)
-			$regex = str_replace($g, '([' . $this->accetableCharacters . ']*)', $regex);
+			$regex = str_replace($g, '([' . $this->acceptableCharacters . ']*)', $regex);
 
 		preg_match_all('/' . $regex . '/iu', $req, $valori, PREG_SET_ORDER);
 		$valori = $valori[0];
