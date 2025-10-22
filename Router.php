@@ -6,17 +6,12 @@ use Model\Router\Events\UrlGet;
 class Router extends Module
 {
 	public ?int $pageId = null;
-	private array $options = [];
 	private array $rules = [];
 	private array $cache = [];
 	private string $accetableCharacters = 'a-zа-я0-9_\p{Han}-';
 
 	public function init(array $options)
 	{
-		$this->options = array_merge([
-			'charLengthIndexed' => [],
-		], $options);
-
 		if (file_exists(INCLUDE_PATH . 'model' . DIRECTORY_SEPARATOR . 'Router' . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'rules.php')) {
 			require(INCLUDE_PATH . 'model' . DIRECTORY_SEPARATOR . 'Router' . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'rules.php');
 			$this->rules = $rules;
@@ -50,7 +45,7 @@ class Router extends Module
 
 					if (strpos($sub_rule, '[p:' . $parent_options['id'] . ']') !== false) {
 						$id = $this->resolveId($r, $sub_rule, '[p:' . $parent_options['id'] . ']');
-						if ($id and is_numeric($id)) {
+						if ($id) {
 							$lastCat = (int)$id;
 							$lastField = $parent_options['field'];
 							continue;
@@ -78,9 +73,9 @@ class Router extends Module
 				$sub_rule = $this->rules[$rule]['rule'][$i];
 				if (str_contains($sub_rule, '[el:' . $options['id'] . ']')) {
 					$id = $this->resolveId($r, $sub_rule, '[el:' . $options['id'] . ']');
-					if ($id and is_numeric($id)) {
+					if ($id) {
 						// The id is in the request, I check if it really exists
-						$where[$options['id']] = $id;
+						$where = [$options['id'] => $id];
 						if ($lastCat !== false)
 							$where[$lastField] = $lastCat;
 
@@ -136,15 +131,15 @@ class Router extends Module
 	 * @param string $request
 	 * @param string $rule
 	 * @param string $pattern
-	 * @return int
+	 * @return int|null
 	 */
-	private function resolveId(string $request, string $rule, string $pattern): int
+	private function resolveId(string $request, string $rule, string $pattern): ?int
 	{
 		$regex = str_replace($pattern, '([0-9]+)', $rule);
 		$regex = preg_replace('/\[(el|p):[a-z0-9_-]+\]/i', '.*', $regex);
 		$regex = str_replace('[*]', '[^?/]*', $regex); // Backward compatibility
 		$id = preg_replace('/^' . $regex . '$/i', '$1', $request);
-		return $id;
+		return $id ? (int)$id : null;
 	}
 
 	/**
@@ -184,11 +179,10 @@ class Router extends Module
 				$qry_ar[] = ['sub' => $qry_gr, 'operator' => 'or'];
 			}
 
-			$order_by = in_array($options['table'], $this->options['charLengthIndexed']) ? 'zk_char_length' : '(' . implode('+', $campi_coinvolti) . ')';
 			if ($options['query-parent'])
 				$qry_ar[] = $options['query-parent'];
 
-			$check = \Model\Db\Db::getConnection()->select($options['table'], $qry_ar, ['order_by' => $order_by]);
+			$check = \Model\Db\Db::getConnection()->select($options['table'], $qry_ar, ['order_by' => '(' . implode('+', $campi_coinvolti) . ')']);
 			return $check ? $check[$options['id']] : null;
 		}
 	}
