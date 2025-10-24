@@ -1,7 +1,7 @@
 {
 	"name": "Router",
-	"description": "Routes manager, the entry door of your pages, an essential building block of every website",
-	"version": "1.2.3",
+	"description": "Deprecated - use model/router instead",
+	"version": "2.0.0",
 	"dependencies": {
 		"Core": ">=2.9.0"
 	}
