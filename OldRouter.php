@@ -3,7 +3,7 @@
 use Model\Core\Module;
 use Model\Router\Events\UrlGet;
 
-class Router extends Module
+class OldRouter extends Module
 {
 	public ?int $pageId = null;
 	private array $rules = [];
