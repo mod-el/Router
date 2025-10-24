@@ -157,17 +157,6 @@ $rules = ' . var_export($this->routerRules, true) . ';
 	}
 
 	/**
-	 * Returns all the rules for the Core to register
-	 *
-	 * @return array
-	 */
-	public function getRules(): array
-	{
-		$this->importRules();
-		return $this->coreRules;
-	}
-
-	/**
 	 * Imports the rules config file (that should consist in a series of "addRule" method calls)
 	 */
 	private function importRules(): void
